@@ -1,0 +1,9 @@
+{
+    "name": "Sinya repository",
+    "id": "sinya_repo",
+    "authors": ["Sinya"],
+    "apps": {
+        "sinya_notes": "/builtin/sinya_notes.app.js",
+        "sinya_js_eval": "/builtin/sinya_js_eval.app.js"
+    }
+}
