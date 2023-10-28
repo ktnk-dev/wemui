@@ -1,23 +1,28 @@
-function cookie_str_array() {
-
+function force_storage_refresh(force = false){
+    storage_version = '1'
+    if (load_storage('system_storage').version != storage_version || force) {
+        document.cookie = 'system_app_manager|repos=|/builtin/repo.json; expires=Mon, 1 Jan 2035 12:00:00 UTC;'
+        document.cookie = 'system_app_manager|apps=|/builtin/sinya_js_eval.app.js|/builtin/sinya_notes.app.js; expires=Mon, 1 Jan 2035 12:00:00 UTC;'
+        document.cookie = 'system_settings|blur=true; expires=Mon, 1 Jan 2035 12:00:00 UTC;'
+        document.cookie = 'system_settings|legacy_wp=false; expires=Mon, 1 Jan 2035 12:00:00 UTC;'
+        document.cookie = 'system_settings|bg=/media/bg.png; expires=Mon, 1 Jan 2035 12:00:00 UTC;'
+        document.cookie = `system_storage|version=${storage_version}; expires=Mon, 1 Jan 2035 12:00:00 UTC;`
+    }
 }
 
 function load_storage(app_data){
-    if (document.cookie == ''){
-        document.cookie = 'system_app_manager|repos=|builtin/; expires=Mon, 1 Jan 2035 12:00:00 UTC;'
-        document.cookie = 'system_app_manager|apps=|builtin/sinya_js_eval.app.js|builtin/sinya_notes.app.js; expires=Mon, 1 Jan 2035 12:00:00 UTC;'
-        document.cookie = 'system_settings|blur=true; expires=Mon, 1 Jan 2035 12:00:00 UTC;'
-        document.cookie = 'system_settings|bg=/media/bg.png; expires=Mon, 1 Jan 2035 12:00:00 UTC;'
-    } 
+    if (typeof(app_data) == 'object') {app_id = app_data.id}
+    else {app_id = app_data}
+
     cookies = document.cookie.split('; ')
     data = {}
     for (let i = 0; i < cookies.length; i++) {
         const cookie = cookies[i];
-        if (cookie.split('=')[0].split('|')[0] == app_data.id){
+        if (cookie.split('=')[0].split('|')[0] == app_id){
             const key = cookie.split('=')[0].split('|')[1]
             value = cookie.split('=')[1]
             if (value == 'true') {value = true}
-            if (value == 'false') {value = true}
+            if (value == 'false') {value = false}
             if (value[0] == '|') {value = value.slice(1).split('|')}
             data[key] = value
         }
@@ -26,6 +31,8 @@ function load_storage(app_data){
 }
 
 function save_storage(app_data, data){
+    if (typeof(app_data) == 'object') {app_id = app_data.id}
+    else {app_id = app_data}
     for (let i = 0; i < Object.keys(data).length; i++) {
         const key = Object.keys(data)[i];
         var value = data[key] 
@@ -33,7 +40,7 @@ function save_storage(app_data, data){
             value = ''
             for (let i = 0; i < data[key].length; i++) { value += `|${data[key][i]}` }
         }
-        document.cookie = `${app_data.id}|${key}=${value}; expires=Mon, 1 Jan 2035 12:00:00 UTC`
+        document.cookie = `${app_id}|${key}=${value}; expires=Mon, 1 Jan 2035 12:00:00 UTC`
         
     }
 }
@@ -41,7 +48,7 @@ function save_storage(app_data, data){
 
 
 async function init_apps(){
-    app_manager = load_storage({id: 'system_app_manager'})
+    app_manager = load_storage('system_app_manager')
     for (let i = 0; i < app_manager.apps.length; i++) {
         const app_url = app_manager.apps[i]
 

@@ -147,7 +147,7 @@ button {
 
 
 .indev_warning {
-    color: #f99;
+    color: #fff;
     margin: 10px;
     user-select: none;
     font-family: monospace;
@@ -157,9 +157,13 @@ button {
     right: 0px;
     text-align: right;
     /* z-index: 999999; */
+    background-color: rgba(0,0,0,.3);
+    padding: 5px 15px 7px;
+    border-radius: 100px;
+    backdrop-filter: blur(40px);
 
 }
 .indev_warning > a {
-    color: #faa;
+    color: #ddd;
     font-family: monospace;
 }

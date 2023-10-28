@@ -12,7 +12,7 @@ include({
     icon: 'fa-gear',
     show_in_app_list: true,
     allow_multiple: false,
-    size: [200, 300],
+    size: [200, 90],
 
     style: `
 .app_system_settings > .content {
@@ -52,22 +52,50 @@ include({
 
     run: () => {
         render_window(app.system_settings, 0, `
-        <p>Background image</p><input placeholder="/media/bg.png" onchange="app.system_settings.edit('bg')" id="app:system_settings:bg_value">
+        <p>Background image</p><input placeholder="Default Background" onchange="app.system_settings.edit('bg')" id="app:system_settings:bg_value" spellcheck="false">
 
         <div>
             <p>Blur support</p>
-            <span class="fa fa-check-circle" onclick="app.system_settings.edit('blur')" id="app:system_settings:blur_value"></span>
+            <span class="fa" onclick="app.system_settings.edit('blur')" id="app:system_settings:blur_value"></span>
         </div>
-        <div>
+        <!-- <div>
             <p>Legacy window placing</p>
             <span class="fa fa-circle-o" onclick="app.system_settings.edit('legacy_wp')" id="app:system_settings:legacy_wp_value"></span>
-        </div>
+        </div> -->
 
-        <h2 style="margin: 10px 0 0px; color: #f99">IN DEVELOPMENT</h2>
+        
         `)
+        st = load_storage('system_settings')
+        if (st.bg == '/media/bg.png') {document.getElementById('app:system_settings:bg_value').value  = ''}
+        else {document.getElementById('app:system_settings:bg_value').value = st.bg }
+
+        if (st.blur == true) { document.getElementById('app:system_settings:blur_value').classList.add('fa-check-circle') }
+        else { document.getElementById('app:system_settings:blur_value').classList.add('fa-circle-o') }
     },
     edit: (value) => {
-        console.log(value);
+        st = load_storage('system_settings')
+        if (value == 'bg') { 
+            st.bg = document.getElementById('app:system_settings:bg_value').value 
+            if (st.bg == '') {
+                st.bg = '/media/bg.png'
+                document.getElementById('app:system_settings:bg_value').placeholder = 'Default Background'
+            } else {document.getElementById('app:system_settings:bg_value').placeholder = st.bg}
+        } if (value == 'blur') {
+            be = document.getElementById('app:system_settings:blur_value').classList
+            if (be.value.indexOf('fa-check-circle') != -1) {
+                be.remove('fa-check-circle')
+                be.add('fa-circle-o')
+                st.blur = false
+
+            } else {
+                be.remove('fa-circle-o')
+                be.add('fa-check-circle')
+                st.blur = true
+            }
+        }
+
+        save_storage('system_settings', st)
+        init_ui()
     },
     close: () => {
         remove_window(app.system_settings, 0)

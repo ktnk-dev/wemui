@@ -1,14 +1,18 @@
+body {
+    --app-bg: rgba(0,0,0,0.4);
+}
+
 app {
     border-radius: 10px;
     position: absolute;
     min-width: 400px;
     min-height: 300px;
-    background-color: rgba(0,0,0,0.4);
+    background-color: var(--app-bg);
     backdrop-filter: blur(100px);
 
     /* background-color: #111; */
 
-    box-shadow: rgba(0,0,0,0.3) 0px 0px 15px 5px ;
+    box-shadow: rgba(0,0,0,0.3) 0px 0px 15px 7px ;
 
     color: #fff;
 
@@ -16,7 +20,8 @@ app {
     grid-template-columns: 100%;
     grid-template-rows: 27px calc(100% - 27px);
 
-    transition: opacity .3s;
+    transition-property: opacity, background;
+    transition-duration:  .4s;
 } 
 app > .header {
     border-radius: 10px 10px 0 0;

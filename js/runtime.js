@@ -116,9 +116,16 @@ async function init_statusbar(){
     }
 
 }
-
+function init_ui() {
+    st = load_storage('system_settings')
+    document.body.style.setProperty('--body-bg', `url(${st.bg})`)
+    if (st.blur == true) { document.body.style.setProperty('--app-bg', `rgba(0,0,0,0.4)`) }
+    else { document.body.style.setProperty('--app-bg', `#171717`) }
+}
 
 async function init() {
+    force_storage_refresh()
+    init_ui()
     init_apps()
     init_statusbar()
 }
